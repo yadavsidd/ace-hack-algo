@@ -105,12 +105,17 @@ app.get("/api/products", (req, res) => {
 
 app.post("/api/products", (req, res) => {
   const { name, description, price, seller_address, image_url, category } = req.body;
+  if (!name || price === undefined || !seller_address) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   const id = randomUUID();
   try {
     db.prepare("INSERT INTO products (id, name, description, price, seller_address, image_url, category) VALUES (?, ?, ?, ?, ?, ?, ?)")
-      .run(id, name, description, price, seller_address, image_url, category);
+      .run(id, name, description || "", price, seller_address, image_url || "", category || "Electronics");
     res.json({ id, status: "success" });
   } catch (error) {
+    console.error("Failed to create product in DB:", error);
     res.status(500).json({ error: "Failed to create product" });
   }
 });

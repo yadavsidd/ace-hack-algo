@@ -81,6 +81,10 @@ export default function Marketplace({ accountAddress, onRefreshBalance }: Market
 
   const handleCreateListing = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!accountAddress) {
+      alert("Please connect your wallet first to create a listing.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       await createProduct({
