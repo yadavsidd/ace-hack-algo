@@ -6,7 +6,8 @@ import algosdk from "algosdk";
 
 const app = express();
 const PORT = 3000;
-const db = new Database("campus_marketplace.db");
+const dbPath = process.env.VERCEL ? "/tmp/campus_marketplace.db" : "campus_marketplace.db";
+const db = new Database(dbPath);
 
 // Algorand Client for Verification
 const ALGOD_SERVER = "https://testnet-api.algonode.cloud";
@@ -420,4 +421,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
